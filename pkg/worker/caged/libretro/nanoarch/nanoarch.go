@@ -71,6 +71,7 @@ type Nanoarch struct {
 	hackSkipSameThreadSave   bool
 	limiter                  func(func())
 	log                      *logger.Logger
+	mu                       sync.Mutex
 }
 
 type Handlers struct {
@@ -145,7 +146,14 @@ func NewNano(localPath string) *Nanoarch {
 }
 
 func (n *Nanoarch) AspectRatio() float32             { return float32(n.sys.av.geometry.aspect_ratio) }
-func (n *Nanoarch) AudioSampleRate() int             { return int(n.sys.av.timing.sample_rate) }
+func (n *Nanoarch) AudioSampleRate() int             {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	if n.sys.av.timing.sample_rate == 0 {
+		return 44100 // Default sample rate if not set
+	}
+	return int(n.sys.av.timing.sample_rate)
+}
 func (n *Nanoarch) VideoFramerate() int              { return int(n.sys.av.timing.fps) }
 func (n *Nanoarch) IsPortrait() bool                 { return 90 == n.Rot%180 }
 func (n *Nanoarch) KbMouseSupport() bool             { return n.meta.KbMouseSupport }
@@ -253,6 +261,9 @@ func (n *Nanoarch) CoreLoad(meta Metadata) {
 }
 
 func (n *Nanoarch) LoadGame(path string) error {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+
 	game := C.struct_retro_game_info{}
 
 	big := bool(n.sys.i.need_fullpath) // big ROMs are loaded by cores later
@@ -305,6 +316,12 @@ func (n *Nanoarch) LoadGame(path string) error {
 		geometryChange(av.geometry)
 	}
 	n.sys.av = av
+
+	// Ensure audio sample rate is valid
+	if n.sys.av.timing.sample_rate < 2000 {
+		n.sys.av.timing.sample_rate = 44100 // Set default if invalid
+		n.log.Warn().Msgf("Invalid audio sample rate detected, using default: %vHz", n.sys.av.timing.sample_rate)
+	}
 
 	n.serializeSize = C.bridge_retro_serialize_size(retroSerializeSize)
 	n.log.Info().Msgf("Save file size: %v", byteCountBinary(int64(n.serializeSize)))

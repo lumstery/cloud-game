@@ -230,6 +230,8 @@ func (f *Frontend) Shutdown() {
 }
 
 func (f *Frontend) linkNano(nano *nanoarch.Nanoarch) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	f.nano = nano
 	if nano == nil {
 		return
@@ -301,14 +303,29 @@ func (f *Frontend) Start() {
 }
 
 func (f *Frontend) LoadGame(path string) error {
+	f.mu.Lock()
+	defer f.mu.Unlock()
 	if f.UniqueSaveDir {
 		f.copyFsMaybe(path)
 	}
 	return f.nano.LoadGame(path)
 }
 
-func (f *Frontend) AspectRatio() float32          { return f.nano.AspectRatio() }
-func (f *Frontend) AudioSampleRate() int          { return f.nano.AudioSampleRate() }
+func (f *Frontend) AspectRatio() float32          { 
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.nano.AspectRatio() 
+}
+
+func (f *Frontend) AudioSampleRate() int { 
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	if f.nano == nil {
+		return 0
+	}
+	return f.nano.AudioSampleRate() 
+}
+
 func (f *Frontend) FPS() int                      { return f.nano.VideoFramerate() }
 func (f *Frontend) Flipped() bool                 { return f.nano.IsGL() }
 func (f *Frontend) FrameSize() (int, int)         { return f.nano.BaseWidth(), f.nano.BaseHeight() }
@@ -323,14 +340,26 @@ func (f *Frontend) Rotation() uint                { return f.nano.Rot }
 func (f *Frontend) SRAMPath() string              { return f.storage.GetSRAMPath() }
 func (f *Frontend) SaveGameState() error          { return f.Save() }
 func (f *Frontend) SaveStateName() string         { return filepath.Base(f.HashPath()) }
-func (f *Frontend) Scale() float64                { return f.scale }
+func (f *Frontend) Scale() float64                { 
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.scale 
+}
 func (f *Frontend) SetAudioCb(cb func(app.Audio)) { f.onAudio = cb }
 func (f *Frontend) SetSessionId(name string)      { f.storage.SetMainSaveName(name) }
 func (f *Frontend) SetDataCb(cb func([]byte))     { f.onData = cb }
 func (f *Frontend) SetVideoCb(ff func(app.Video)) { f.onVideo = ff }
 func (f *Frontend) Tick()                         { f.mu.Lock(); f.nano.Run(); f.mu.Unlock() }
-func (f *Frontend) ViewportRecalculate()          { f.mu.Lock(); f.vw, f.vh = f.ViewportCalc(); f.mu.Unlock() }
-func (f *Frontend) ViewportSize() (int, int)      { return f.vw, f.vh }
+func (f *Frontend) ViewportRecalculate()          { 
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.vw, f.vh = f.ViewportCalc()
+}
+func (f *Frontend) ViewportSize() (int, int)      { 
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.vw, f.vh 
+}
 
 func (f *Frontend) Input(port int, device byte, data []byte) {
 	switch Device(device) {

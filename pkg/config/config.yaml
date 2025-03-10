@@ -269,6 +269,16 @@ emulator:
           lib: fbneo_libretro
           folder: mame
           roms: [ "zip" ]
+        # J2ME support for Java mobile games
+        j2me:
+          lib: freej2me_libretro
+          folder: j2me
+          roms: [ "jar" ]
+          # J2ME requires Java runtime to be available on the system
+          options:
+            "freej2me_resolution": "240x320"
+            "freej2me_rotate": "0"
+            "freej2me_phone": "Nokia_6230i"
         nes:
           lib: nestopia_libretro
           roms: [ "nes" ]

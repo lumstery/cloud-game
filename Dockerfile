@@ -79,6 +79,8 @@ RUN apt-get -q update && apt-get -q install --no-install-recommends -y \
     curl \
     libx11-6 \
     libxext6 \
+    # Add Java support for J2ME emulation
+    default-jre \
  && apt-get autoremove \
  && rm -rf /var/lib/apt/lists/* /var/log/* /usr/share/bug /usr/share/doc /usr/share/doc-base \
     /usr/share/X11/locale/*

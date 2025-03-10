@@ -50,6 +50,7 @@ a better sense of performance.
    instances.
 6. **Cloud storage**: Game state is storing on online storage, so you can come back and continue playing your incomplete
    game later.
+7. **J2ME Support**: Play Java mobile (.jar) games directly in your browser. [See J2ME setup instructions](J2ME_SUPPORT.md).
 
 ## Development environment
 

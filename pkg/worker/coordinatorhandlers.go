@@ -2,6 +2,7 @@ package worker
 
 import (
 	"encoding/base64"
+	"sync"
 
 	"github.com/giongto35/cloud-game/v3/pkg/api"
 	"github.com/giongto35/cloud-game/v3/pkg/com"
@@ -133,11 +134,21 @@ func (c *coordinator) HandleGameStart(rq api.StartGameRequest[com.Uid], w *Worke
 
 		m := media.NewWebRtcMediaPipe(w.conf.Encoder.Audio, w.conf.Encoder.Video, w.log)
 
+		// Create a mutex to protect shared state
+		var mu sync.Mutex
+
+		// Initialize media parameters before setting up callbacks
+		mu.Lock()
+		m.AudioFrames = w.conf.Encoder.Audio.Frames
+		mu.Unlock()
+
 		// recreate the video encoder
 		app.VideoChangeCb(func() {
+			mu.Lock()
 			app.ViewportRecalculate()
 			m.VideoW, m.VideoH = app.ViewportSize()
 			m.VideoScale = app.Scale()
+			mu.Unlock()
 
 			if m.IsInitialized() {
 				if err := m.Reinit(); err != nil {
@@ -145,6 +156,7 @@ func (c *coordinator) HandleGameStart(rq api.StartGameRequest[com.Uid], w *Worke
 				}
 			}
 
+			mu.Lock()
 			data, err := api.Wrap(api.Out{
 				T: uint8(api.AppVideoChange),
 				Payload: api.AppVideoInfo{
@@ -153,6 +165,8 @@ func (c *coordinator) HandleGameStart(rq api.StartGameRequest[com.Uid], w *Worke
 					A: app.AspectRatio(),
 					S: int(app.Scale()),
 				}})
+			mu.Unlock()
+
 			if err != nil {
 				c.log.Error().Err(err).Msgf("wrap")
 			}
@@ -167,10 +181,19 @@ func (c *coordinator) HandleGameStart(rq api.StartGameRequest[com.Uid], w *Worke
 			return api.EmptyPacket
 		}
 
-		m.AudioSrcHz = app.AudioSampleRate()
-		m.AudioFrames = w.conf.Encoder.Audio.Frames
+		// Initialize media after game is loaded to ensure proper audio sample rate
+		mu.Lock()
+		sampleRate := app.AudioSampleRate()
+		if sampleRate < 2000 {
+			c.log.Error().Msgf("Invalid audio sample rate: %d", sampleRate)
+			r.Close()
+			w.router.SetRoom(nil)
+			return api.EmptyPacket
+		}
+		m.AudioSrcHz = sampleRate
 		m.VideoW, m.VideoH = app.ViewportSize()
 		m.VideoScale = app.Scale()
+		mu.Unlock()
 
 		r.SetMedia(m)
 
