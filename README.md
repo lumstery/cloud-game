@@ -54,9 +54,21 @@ a better sense of performance.
 ## Development environment
 
 * Install [Go](https://golang.org/doc/install)
-* Install [libvpx](https://www.webmproject.org/code/), [libx264](https://www.videolan.org/developers/x264.html)
-  , [libopus](http://opus-codec.org/), [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
-  , [sdl2](https://wiki.libsdl.org/Installation), [libyuv](https://chromium.googlesource.com/libyuv/libyuv/)+[libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo)
+
+### Quick Setup (Recommended)
+Run the setup script to automatically install all required dependencies:
+```bash
+./setup.sh
+```
+
+### Manual Setup
+If you prefer to install dependencies manually, you'll need to install:
+* [libvpx](https://www.webmproject.org/code/)
+* [libx264](https://www.videolan.org/developers/x264.html)
+* [libopus](http://opus-codec.org/)
+* [pkg-config](https://www.freedesktop.org/wiki/Software/pkg-config/)
+* [sdl2](https://wiki.libsdl.org/Installation)
+* [libyuv](https://chromium.googlesource.com/libyuv/libyuv/)+[libjpeg-turbo](https://github.com/libjpeg-turbo/libjpeg-turbo)
 
 ```
 # Ubuntu / Windows (WSL2)
