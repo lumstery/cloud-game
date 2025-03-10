@@ -25,8 +25,6 @@ import {
     MOUSE_MOVED,
     MOUSE_PRESSED,
     POINTER_LOCK_CHANGE,
-    RECORDING_STATUS_CHANGED,
-    RECORDING_TOGGLED,
     REFRESH_INPUT,
     SETTINGS_CHANGED,
     WEBRTC_CONNECTION_CLOSED,
@@ -49,7 +47,6 @@ import {debounce} from 'utils';
 import {gameList} from './gameList.js?v=3';
 import {menu} from './menu.js?v=3';
 import {message} from './message.js?v=3';
-import {recording} from './recording.js?v=3';
 import {room} from './room.js?v=3';
 import {screen} from './screen.js?v=3';
 import {stats} from './stats.js?v=3';
@@ -169,8 +166,8 @@ const startGame = () => {
     api.game.start(
         gameList.selected,
         room.id,
-        recording.isActive(),
-        recording.getUser(),
+        false,
+        "",
         +playerIndex.value - 1,
     )
 
@@ -214,12 +211,6 @@ const onMessage = (m) => {
             break;
         case api.endpoint.LATENCY_CHECK:
             pub(LATENCY_CHECK_REQUESTED, {packetId: id, addresses: payload});
-            break;
-        case api.endpoint.GAME_RECORDING:
-            pub(RECORDING_STATUS_CHANGED, payload);
-            break;
-        case api.endpoint.GAME_ERROR_NO_FREE_SLOTS:
-            pub(GAME_ERROR_NO_FREE_SLOTS);
             break;
         case api.endpoint.APP_VIDEO_CHANGE:
             pub(APP_VIDEO_CHANGED, {...payload})
@@ -299,24 +290,6 @@ const handleToggle = (force = false) => {
     toggle.checked = !toggle.checked;
     pub(DPAD_TOGGLE, {checked: toggle.checked});
 };
-
-const handleRecording = (data) => {
-    const {recording, userName} = data;
-    api.game.toggleRecording(recording, userName);
-}
-
-const handleRecordingStatus = (data) => {
-    if (data === 'ok') {
-        message.show(`Recording ${recording.isActive() ? 'on' : 'off'}`)
-        if (recording.isActive()) {
-            recording.setIndicator(true)
-        }
-    } else {
-        message.show(`Recording failed ):`)
-        recording.setIndicator(false)
-    }
-    log.debug("recording is ", recording.isActive())
-}
 
 const _default = {
     name: 'default',
@@ -527,8 +500,6 @@ sub(KEY_RELEASED, onKeyRelease);
 sub(SETTINGS_CHANGED, () => message.show('Settings have been updated'));
 sub(AXIS_CHANGED, onAxisChanged);
 sub(CONTROLLER_UPDATED, data => webrtc.input(data));
-sub(RECORDING_TOGGLED, handleRecording);
-sub(RECORDING_STATUS_CHANGED, handleRecordingStatus);
 
 sub(SETTINGS_CHANGED, () => {
     const s = settings.get();

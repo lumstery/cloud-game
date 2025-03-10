@@ -128,7 +128,6 @@ func (c *coordinator) HandleGameStart(rq api.StartGameRequest[com.Uid], w *Worke
 		app.SetSessionId(uid)
 		app.SetSaveOnClose(true)
 		app.EnableCloudStorage(uid, w.storage)
-		app.EnableRecording(rq.Record, rq.RecordUser, gameName)
 
 		r.SetApp(app)
 
@@ -229,7 +228,6 @@ func (c *coordinator) HandleGameStart(rq api.StartGameRequest[com.Uid], w *Worke
 
 	response := api.StartGameResponse{
 		Room:    api.Room{Rid: r.Id()},
-		Record:  w.conf.Recording.Enabled,
 		KbMouse: needsKbMouse,
 	}
 	if r.App().AspectEnabled() {
@@ -297,18 +295,6 @@ func (c *coordinator) HandleChangePlayer(rq api.ChangePlayerRequest[com.Uid], w 
 	user.Index = rq.Index
 	w.log.Info().Msgf("Updated player index to: %d", rq.Index)
 	return api.Out{Payload: rq.Index}
-}
-
-func (c *coordinator) HandleRecordGame(rq api.RecordGameRequest[com.Uid], w *Worker) api.Out {
-	if !w.conf.Recording.Enabled {
-		return api.ErrPacket
-	}
-	r := w.router.FindRoom(rq.Rid)
-	if r == nil {
-		return api.ErrPacket
-	}
-	room.WithRecorder(r.App()).ToggleRecording(rq.Active, rq.User)
-	return api.OkPacket
 }
 
 // fromBase64Json decodes data from a URL-encoded Base64+JSON string.

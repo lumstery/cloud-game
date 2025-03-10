@@ -132,12 +132,6 @@ func (c *coordinator) HandleRequests(w *Worker) chan struct{} {
 				return api.ErrMalformed
 			}
 			c.HandleResetGame(*dat, w)
-		case api.RecordGame:
-			if dat := api.Unwrap[api.RecordGameRequest[com.Uid]](x.Payload); dat == nil {
-				err, out = api.ErrMalformed, api.EmptyPacket
-			} else {
-				out = c.HandleRecordGame(*dat, w)
-			}
 		default:
 			c.log.Warn().Msgf("unhandled packet type %v", x.T)
 		}

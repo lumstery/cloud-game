@@ -17,8 +17,7 @@ type Caged struct {
 }
 
 type CagedConf struct {
-	Emulator  config.Emulator
-	Recording config.Recording
+	Emulator config.Emulator
 }
 
 func (c *Caged) Name() string { return "libretro" }
@@ -57,14 +56,6 @@ func (c *Caged) Load(game games.GameMetadata, path string) error {
 	}
 	c.ViewportRecalculate()
 	return nil
-}
-
-func (c *Caged) EnableRecording(nowait bool, user string, game string) {
-	if c.conf.Recording.Enabled {
-		// !to fix races with canvas pool when recording
-		c.base.DisableCanvasPool = true
-		c.Emulator = WithRecording(c.Emulator, nowait, user, game, c.conf.Recording, c.log)
-	}
 }
 
 func (c *Caged) EnableCloudStorage(uid string, storage cloud.Storage) {

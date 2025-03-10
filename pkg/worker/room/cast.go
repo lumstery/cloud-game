@@ -16,7 +16,4 @@ func NewGameRouter() *GameRouter {
 }
 
 func WithEmulator(wtf any) *libretro.Caged { return wtf.(*libretro.Caged) }
-func WithRecorder(wtf any) *libretro.RecordingFrontend {
-	return (WithEmulator(wtf).Emulator).(*libretro.RecordingFrontend)
-}
 func WithWebRTC(wtf Session) *webrtc.Peer { return wtf.(*webrtc.Peer) }

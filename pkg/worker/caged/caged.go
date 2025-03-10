@@ -49,14 +49,9 @@ func (m *Manager) loadLibretro(conf any) (*libretro.Caged, error) {
 	if !e.IsValid() {
 		return nil, errors.New("no emulator conf")
 	}
-	r := s.FieldByName("Recording")
-	if !r.IsValid() {
-		return nil, errors.New("no recording conf")
-	}
 
 	c := libretro.CagedConf{
-		Emulator:  e.Interface().(config.Emulator),
-		Recording: r.Interface().(config.Recording),
+		Emulator: e.Interface().(config.Emulator),
 	}
 
 	caged := libretro.Cage(c, m.log)
