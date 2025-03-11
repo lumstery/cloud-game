@@ -15,16 +15,27 @@ html {
 }
 
 body {
-    background-image: url('/img/background.jpg');
+    background-image: url('../img/background.jpg');
     background-repeat: repeat;
+    /* Force portrait orientation */
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #gamebody {
-    display: flex;
+    display: flex !important;
+    flex-direction: column;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 100;
 
     overflow: hidden;
-    width: 640px;
-    height: 286px;
+    width: 360px;
+    height: 700px;
 
     position: absolute;
     top: 50%;
@@ -32,10 +43,13 @@ body {
     margin-right: -50%;
     transform: translate(-50%, -50%);
 
-    background-image: url('/img/ui/bg.jpg');
+    background-color: #e5e5e5;
+    background-image: none;
     background-repeat: no-repeat;
     background-size: 100% 100%;
     border-radius: 24px;
+    border: 2px solid #888;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 
     user-select: none;
 }
@@ -61,14 +75,16 @@ body {
     height: 100%;
     position: absolute;
 
-    background-image: url('/img/help_overlay.png');
+    background-image: url('../img/help_overlay.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
 }
 
 #controls-right {
     position: absolute;
-    left: 70px;
+    bottom: 20px;
+    right: 20px;
+    z-index: 5;
 }
 
 
@@ -77,25 +93,27 @@ body {
     width: 100px;
     height: 100px;
     position: absolute;
-    top: 155px;
+    bottom: 100px;
     left: 22px;
     background-size: contain;
-    background-image: url('/img/ui/bt MOVE.png');
-    z-index: 1;
+    background-image: url('../img/ui/bt MOVE.png');
+    z-index: 5;
 }
 
 .dpad-empty {
-    background-image: url('/img/ui/bt MOVE EMPTY.png') !important;
+    background-image: url('../img/ui/bt MOVE EMPTY.png') !important;
 }
 
 #guide-txt {
     color: #979797;
     font-size: 8px;
-    top: 269px;
-    left: 101px;
+    bottom: 5px;
+    left: 60px;
     position: absolute;
-
+    max-width: 240px;
+    text-align: center;
     user-select: none;
+    z-index: 5;
 }
 
 #circle-pad {
@@ -110,13 +128,13 @@ body {
     pointer-events: none;
 
     opacity: 0.5;
-    background-image: url('/img/ui/bong.png');
+    background-image: url('../img/ui/bong.png');
 }
 
 
 .bong-full {
     opacity: 1.0 !important;
-    background-image: url('/img/ui/bong full.png') !important;
+    background-image: url('../img/ui/bong full.png') !important;
 }
 
 .dpad {
@@ -129,7 +147,7 @@ body {
 #player-index {
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url('/img/ui/bt PlayerIndex.png');
+    background-image: url('../img/ui/bt PlayerIndex.png');
 }
 
 #btn-up {
@@ -170,8 +188,9 @@ body {
     width: 120px;
     height: 120px;
     position: absolute;
-    top: 135px;
-    left: 425px;
+    bottom: 60px;
+    right: 30px;
+    z-index: 5;
 }
 
 .btn {
@@ -200,42 +219,47 @@ body {
     width: 20px;
     height: 28px;
 
-    top: 16px;
+    bottom: 20px;
     left: 23px;
 
-    background-image: url('/img/ui/Help.png');
+    background-image: url('../img/ui/Help.png');
+    z-index: 5;
 }
 
 #btn-load {
-    top: 20px;
-    left: 435px;
+    bottom: 230px;
+    right: 20px;
 
-    background-image: url('/img/ui/bt LOAD.png');
+    background-image: url('../img/ui/bt LOAD.png');
+    z-index: 5;
 }
 
 #btn-save {
-    top: 60px;
-    left: 435px;
+    bottom: 190px;
+    right: 20px;
 
-    background-image: url('/img/ui/bt SAVE.png');
+    background-image: url('../img/ui/bt SAVE.png');
+    z-index: 5;
 }
 
 #btn-join {
     width: 46px;
-    top: 70px;
+    bottom: 200px;
     left: 22px;
     height: 25px;
 
-    background-image: url('/img/ui/bt SHARE.png');
+    background-image: url('../img/ui/bt SHARE.png');
+    z-index: 5;
 }
 
 #btn-quit {
     width: 46px;
-    top: 70px;
-    left: 75px;
+    bottom: 160px;
+    left: 22px;
     height: 25px;
 
-    background-image: url('/img/ui/bt QUIT.png');
+    background-image: url('../img/ui/bt QUIT.png');
+    z-index: 5;
 }
 
 #btn-rec {
@@ -244,25 +268,17 @@ body {
     left: 373px;
     height: 9px;
 
-    background-image: url('/img/ui/bt REC.png');
+    background-image: url('../img/ui/bt REC.png');
 }
 
 .record-user {
-    position: absolute;
-    padding-left: 6px;
-    font-size: 12px;
-    width: 109px;
-    top: 4px;
-    left: 262px;
-    color: #888888;
-    border-radius: 6px;
-    outline: none;
-    border-top-style: hidden;
-    border-right-style: hidden;
-    border-left-style: hidden;
-    border-bottom-style: hidden;
-    background-image: url('/img/ui/FrameTEXT.png');
-    background-size: cover;
+    display: block;
+    position: relative;
+    top: 0px;
+    left: -10px;
+    width: 36px;
+    height: 10px;
+    background-image: url('../img/ui/FrameTEXT.png');
 }
 
 .record:before {
@@ -289,72 +305,79 @@ body {
 
 
 #btn-select {
-    width: 46px;
-    top: 100px;
-    left: 435px;
-    height: 25px;
+    top: auto;
+    bottom: 180px;
+    right: 20px;
 
-    background-image: url('/img/ui/bt SELECT.png');
+    background-image: url('../img/ui/bt SELECT.png');
+    z-index: 5;
 }
 
 #btn-start {
-    width: 46px;
-    top: 100px;
-    left: 489px;
+    top: auto;
+    bottom: 140px;
+    right: 20px;
 
-    background-image: url('/img/ui/bt START.png');
+    background-image: url('../img/ui/bt START.png');
+    z-index: 5;
 }
 
 #btn-a {
-    top: 50%;
-    right: 0;
-
-    transform: translateY(-50%);
-
-    background-image: url('/img/ui/bt A.png');
+    top: auto;
+    bottom: 60px;
+    right: 70px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background-image: url('../img/ui/bt A.png');
+    z-index: 5;
 }
 
 
 #btn-b {
-    bottom: 0;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    background-image: url('/img/ui/bt B.png');
+    top: auto;
+    bottom: 20px;
+    right: 110px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background-image: url('../img/ui/bt B.png');
+    z-index: 5;
 }
 
 #btn-x {
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-
-    background-image: url('/img/ui/bt X.png');
+    top: auto;
+    bottom: 100px;
+    right: 110px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background-image: url('../img/ui/bt X.png');
+    z-index: 5;
 }
 
 
 #btn-y {
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-
-    background-image: url('/img/ui/bt Y.png');
+    top: auto;
+    bottom: 60px;
+    right: 150px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    background-image: url('../img/ui/bt Y.png');
+    z-index: 5;
 }
 
 #btn-settings {
-    width: 65px;
-    height: 21px;
-
-    top: 26px;
-    left: 55px;
-
-    padding: 0;
-
-    transform: translateY(-50%);
-    background-image: url('/img/ui/bt OPTIONS.png');
-
-    opacity: .7;
-    z-index: 0;
+    top: auto;
+    bottom: 265px;
+    left: 22px;
+    background-image: url('../img/ui/bt OPTIONS.png');
+    z-index: 5;
 }
 
 #lights-holder {
@@ -368,20 +391,19 @@ body {
 
 #room-txt {
     position: absolute;
-    width: 59px;
-    top: 48px;
-    left: 23px;
-    color: #bababa;
-    padding-left: 0;
+    padding-left: 6px;
+    font-size: 12px;
+    width: 109px;
+    top: 5px;
+    left: 265px;
+    color: #888888;
     border-radius: 6px;
-
     outline: none;
     border-top-style: hidden;
     border-right-style: hidden;
     border-left-style: hidden;
     border-bottom-style: hidden;
-
-    background-image: url('/img/ui/FrameTEXT.png');
+    background-image: url('../img/ui/FrameTEXT.png');
     background-size: cover;
 }
 
@@ -404,138 +426,128 @@ body {
 }
 
 #menu-screen {
-    position: relative; /*must not static*/
+    display: flex;
+    flex-direction: column;
+    width: 240px;
+    height: 320px;
+    max-width: 240px;
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-    display: block;
-    overflow: hidden;
-    width: 320px;
-    height: 240px;
-
-    background-image: url('/img/screen_background5.png');
+    background-color: #000000;
+    background-image: url('../img/screen_background5.png');
     background-size: cover;
-    z-index: 1;
 }
 
+
+
 #menu-item-choice {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
     position: absolute;
-
-    width: 100%;
-    height: 36px;
-    background-color: #FFCF9E;
-    opacity: 0.75;
-    mix-blend-mode: lighten;
-
     top: 50%;
-    left: 0;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 2px solid #a5c89f;
+    border-radius: 5px;
+    padding: 10px;
+    z-index: 10;
 }
 
 
 #menu-container {
-    display: block;
-    position: absolute;
-
+    display: flex;
+    flex-direction: column;
     width: 100%;
-
-    top: 102px; /* 240px - 36 / 2 */
-    left: 0;
-    /*z-index: 1;*/
+    padding: 15px 5px;
+    overflow-y: auto;
+    max-height: 280px; /* Allow room for possible header/footer */
 }
 
-
 .menu-item {
-    display: block;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 5px;
+    margin-bottom: 5px;
+    background-color: rgba(165, 200, 159, 0.2);
+    border-radius: 5px;
+    cursor: pointer;
+}
 
-    width: 100%;
-    height: 36px; /* 35 + 1 border = 36px */
-
-    font-family: '6809', monospace;
-    font-size: 19px;
+.menu-item:hover {
+    background-color: rgba(165, 200, 159, 0.4);
 }
 
 .menu-item div:first-child {
     overflow: hidden;
-    display: block;
-    position: absolute;
-
-    left: 15px;
-    top: 7px;
-    width: 288px;
-    height: 25px;
+    width: 100%;
 }
 
 .menu-item div span {
-    position: absolute;
-
+    display: block;
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: pre;
+    white-space: nowrap;
     text-align: center;
     color: white;
+    font-family: '6809', monospace;
+    font-size: 14px;
 }
 
 .menu-item div .pick {
-    overflow: unset;
+    color: #a5c89f;
 }
 
 .menu-item__info {
-    color: white;
-    opacity: .55;
-    font-size: 30%;
+    margin-top: 3px;
+    font-size: 10px;
+    color: #888;
     text-align: center;
-    padding-top: 3px;
 }
 
 #noti-box {
     display: none;
-    padding: 5px 10px 0 10px;
-    height: 20px;
-    background-color: #ddd;
+    padding: 8px 15px;
+    background-color: #a5c89f;
     position: absolute;
-
-    border: 5px #000;
-    border-radius: 30px;
-
+    border: 1px solid #333;
+    border-radius: 15px;
+    color: #333;
+    
     left: 50%;
     transform: translateX(-50%);
-    bottom: 35px;
-
+    bottom: 80px;
+    
     font-size: 12px;
+    font-family: '6809', monospace;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 100;
 }
 
 #slider-playeridx {
-    display: block;
-    margin-top: 10px;
-    text-align: center;
-    font-family: 'Arial', sans-serif;
-    font-size: 15px;
-
-    color: #bababa;
     position: absolute;
-    top: 90px;
-    left: 20px;
-    width: 100px;
-
-    user-select: none;
+    top: auto;
+    bottom: 230px;
+    left: 22px;
+    width: 120px;
+    height: 15px;
+    z-index: 5;
 }
 
 /* The slider itself */
 .slider {
-    -webkit-appearance: none; /* Override default CSS styles */
+    -webkit-appearance: none;
     appearance: none;
-    width: 100%; /* Full-width */
-    height: 25px; /* Specified height */
-    outline: none; /* Remove outline */
-    /*opacity: 0.7; [> Set transparency (for mouse-over effects on hover) <]*/
-    transition: opacity .2s;
-
-    background-color: transparent;
+    width: 100%;
+    height: 15px;
+    outline: none;
+    background-image: url('../img/ui/FramePlayerIndex.png');
+    background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-size: contain;
-    background-image: url('/img/ui/FramePlayerIndex.png');
 }
 
 /* Mouse-over effects */
@@ -545,29 +557,24 @@ body {
 
 /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
 .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
+    -webkit-appearance: none;
     appearance: none;
-    width: 25px; /* Set a specific slider handle width */
-    height: 25px; /* Slider handle height */
-    cursor: pointer; /* Cursor on hover */
-
-    background-color: transparent;
+    width: 25px;
+    height: 25px;
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url('/img/ui/bt PlayerIndex.png');
+    background-image: url('../img/ui/bt PlayerIndex.png');
+    cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
-    appearance: none;
-    width: 25px; /* Set a specific slider handle width */
-    height: 25px; /* Slider handle height */
-    cursor: pointer; /* Cursor on hover */
-
-    border: 0;
-    background-color: transparent;
+    width: 25px;
+    height: 25px;
+    border: none;
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url('/img/ui/bt PlayerIndex.png');
+    background-image: url('../img/ui/bt PlayerIndex.png');
+    cursor: pointer;
 }
 
 * {
@@ -576,12 +583,11 @@ body {
 
 .dpad-toggle-label {
     position: absolute;
-    display: inline-block;
-    width: 35px;
-    height: 20px;
-
-    top: 45px;
-    left: 85px;
+    bottom: 60px;
+    left: 100px;
+    width: 30px;
+    height: 15px;
+    z-index: 5;
 }
 
 .dpad-toggle-label input {
@@ -632,4 +638,11 @@ input:checked + .dpad-toggle-slider:before {
 
 .source a {
     color: #dddddd;
+}
+
+#w {
+    top: auto;
+    bottom: 285px;
+    left: 22px;
+    z-index: 5;
 }

@@ -1,4 +1,3 @@
-
 .hidden, [hidden] {
     display: none !important;
 }
@@ -216,12 +215,14 @@
 
 .app-button {
     position: absolute;
-    top: 34px;
-    left: 45px;
+    top: auto;
+    bottom: 470px;
+    left: 22px;
     cursor: pointer;
     font-size: 70%;
     color: #606060;
     font-family: '6809', sans-serif;
+    z-index: 5;
 }
 
 .app-button:hover {
@@ -230,7 +231,7 @@
 
 .app-button.fs {
     position: relative;
-    top: 0;
+    top: auto;
     left: 0;
 }
 
@@ -244,45 +245,61 @@
     display: flex;
     /*align-items: center;*/
     justify-content: center;
+    overflow: hidden;
 
     min-width: 0 !important;
     min-height: 0 !important;
+    
+    width: 240px;
+    height: 320px;
+    
+    position: relative;
+    top: 30px;
+    align-self: center;
+    
+    border: 6px solid #333;
+    border-radius: 8px;
+    margin-bottom: 100px;
+    background-color: #a5c89f;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+}
 
+/* Mobile phone game title */
+#screen::before {
+    content: "J2ME GAMES";
     position: absolute;
-    /* popups under the screen fix */
-    z-index: -1;
-
-    width: 320px;
-    height: 240px;
-    top: 23px;
-    left: 150px;
-    overflow: hidden;
-    background-color: #000000;
-
-    border-radius: 5px 5px 5px 5px;
-    box-shadow: 0 0 2px 2px rgba(25, 25, 25, 1);
+    top: -25px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
 }
 
 .screen__footer {
     position: absolute;
     bottom: 0;
+    width: 100%;
+    
     display: flex;
-    flex-direction: row;
-    border-top: 1px solid #1b1b1b;
-    width: calc(100% - .6rem);
     justify-content: space-between;
-
-    background-color: #00000022;
-
-    height: 13px;
-    font-size: .6rem;
-    color: #ffffff;
-
-    opacity: .3;
-
-    padding: 0 .2em;
-
-    cursor: default;
+    
+    color: #9e9e9e;
+    font-size: 60%;
+    
+    user-select: none;
+    
+    z-index: 5;
+    
+    padding: 0 .5em;
+    
+    font-weight: lighter;
+    font-family: monospace;
+    
+    transition: opacity 300ms ease-in-out;
+    opacity: 0;
 }
 
 .hover:hover {
@@ -360,7 +377,53 @@
 }
 
 #play-stream {
-    color: brown;
-    align-content: center;
-    font-size: 200%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    
+    transform: translate(-50%, -50%);
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    color: white;
+    
+    z-index: 4;
+    
+    border-radius: 5px;
+    background-color: #00000088;
+    
+    padding: .5rem;
+    
+    cursor: pointer;
+}
+
+/* Mobile phone decorative elements */
+#gamebody:before {
+    content: "";
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 10px;
+    background-color: #333;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+
+/* Mobile phone brand text - avoiding Nokia directly */
+.mobile-brand {
+    position: absolute;
+    bottom: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+    letter-spacing: 1px;
+    z-index: 10;
 }

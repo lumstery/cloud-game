@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="orientation" content="portrait">
 
     <meta property="og:type" content="cloud-game"/>
     <meta property="og:title" content="Web-based Cloud Gaming for Retro Games"/>
@@ -22,14 +23,6 @@
 <body>
 <div id="gamebody">
     <div class="app-button" id="w" title="Workers">W</div>
-
-    <div id="circle-pad-holder">
-        <div id="btn-up" class="dpad" data-key="up"></div>
-        <div id="btn-down" class="dpad" data-key="down"></div>
-        <div id="btn-left" class="dpad" data-key="left"></div>
-        <div id="btn-right" class="dpad" data-key="right"></div>
-        <div id="circle-pad"></div>
-    </div>
 
     <div id="screen">
         <video id="stream" class="game-screen" hidden muted playsinline preload="none"></video>
@@ -49,6 +42,14 @@
             <span>⏵</span>
             <span>Click to play</span>
         </div>
+    </div>
+
+    <div id="circle-pad-holder">
+        <div id="btn-up" class="dpad" data-key="up"></div>
+        <div id="btn-down" class="dpad" data-key="down"></div>
+        <div id="btn-left" class="dpad" data-key="left"></div>
+        <div id="btn-right" class="dpad" data-key="right"></div>
+        <div id="circle-pad"></div>
     </div>
 
     <div id="servers"></div>
@@ -98,6 +99,8 @@
         <div id="help-overlay-detail"></div>
     </div>
     <div id="btn-help" class="btn" data-key="help"></div>
+    
+    <div class="mobile-brand">RetroPhone</div>
 </div>
 <div class="source"><span>Cloudretro (ɔ) 2025</span>
     <a rel="noopener noreferrer" target="_blank" href="https://github.com/giongto35/cloud-game">
