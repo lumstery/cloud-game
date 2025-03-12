@@ -69,11 +69,38 @@ const playerIndex = document.getElementById('playeridx');
 // screen init
 screen.add(menu, stream);
 
-// keymap
-const keyButtons = {};
-Object.keys(KEY).forEach(button => {
-    keyButtons[KEY[button]] = document.getElementById(`btn-${KEY[button]}`);
-});
+// Initialize keyButtons object with numeric keys
+const keyButtons = {
+    [KEY.UP]: document.querySelector('.key-up'),
+    [KEY.DOWN]: document.querySelector('.key-down'),
+    [KEY.LEFT]: document.querySelector('.key-left'),
+    [KEY.RIGHT]: document.querySelector('.key-right'),
+    [KEY.A]: document.querySelector('.key-a'),
+    [KEY.B]: document.querySelector('.key-b'),
+    [KEY.X]: document.querySelector('.key-x'),
+    [KEY.Y]: document.querySelector('.key-y'),
+    [KEY.L]: document.querySelector('.key-l'),
+    [KEY.R]: document.querySelector('.key-r'),
+    [KEY.L2]: document.querySelector('.key-l2'),
+    [KEY.R2]: document.querySelector('.key-r2'),
+    [KEY.L3]: document.querySelector('.key-l3'),
+    [KEY.R3]: document.querySelector('.key-r3'),
+    [KEY.START]: document.querySelector('.key-start'),
+    [KEY.SELECT]: document.querySelector('.key-select'),
+    // Add numeric keys
+    ['0']: document.querySelector('.phone-key[data-key="0"]'),
+    ['1']: document.querySelector('.phone-key[data-key="1"]'),
+    ['2']: document.querySelector('.phone-key[data-key="2"]'),
+    ['3']: document.querySelector('.phone-key[data-key="3"]'),
+    ['4']: document.querySelector('.phone-key[data-key="4"]'),
+    ['5']: document.querySelector('.phone-key[data-key="5"]'),
+    ['6']: document.querySelector('.phone-key[data-key="6"]'),
+    ['7']: document.querySelector('.phone-key[data-key="7"]'),
+    ['8']: document.querySelector('.phone-key[data-key="8"]'),
+    ['9']: document.querySelector('.phone-key[data-key="9"]'),
+    ['*']: document.querySelector('.phone-key[data-key="*"]'),
+    ['#']: document.querySelector('.phone-key[data-key="#"]')
+};
 
 /**
  * State machine transition.
@@ -227,6 +254,8 @@ const onKeyPress = (data) => {
     if (button) {
         if (_dpadArrowKeys.includes(data.key)) {
             button.classList.add('dpad-pressed');
+        } else if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '#'].includes(data.key)) {
+            button.classList.add('phone-key-pressed');
         } else {
             button.classList.add('pressed');
         }
@@ -246,6 +275,8 @@ const onKeyRelease = data => {
     if (button) {
         if (_dpadArrowKeys.includes(data.key)) {
             button.classList.remove('dpad-pressed');
+        } else if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '#'].includes(data.key)) {
+            button.classList.remove('phone-key-pressed');
         } else {
             button.classList.remove('pressed');
         }

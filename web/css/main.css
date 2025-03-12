@@ -417,6 +417,12 @@ body {
     opacity: 0.75;
 }
 
+.phone-key-pressed {
+    background-color: #555 !important;
+    opacity: 0.8;
+    transform: scale(0.95);
+}
+
 .game-screen {
     position: relative;
     object-fit: contain;
@@ -432,8 +438,8 @@ body {
     height: 320px;
     max-width: 240px;
     max-height: 320px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+    position: relative;
 
     background-color: #000000;
     background-image: url('../img/screen_background5.png');
@@ -573,18 +579,24 @@ body {
     flex-direction: column;
     width: 100%;
     padding: 15px 5px;
-    overflow-y: auto;
+    overflow-y: hidden;
     max-height: 280px; /* Allow room for possible header/footer */
+    position: absolute;
+    top: 102px; /* Initial position, will be changed by JS */
 }
 
 .menu-item {
     display: flex;
     flex-direction: column;
-    padding: 8px 5px;
-    margin-bottom: 5px;
+    padding: 5px 5px;
+    margin-bottom: 4px;
     background-color: rgba(165, 200, 159, 0.2);
     border-radius: 5px;
     cursor: pointer;
+    height: 30px; 
+    box-sizing: border-box;
+    transition: transform 0.15s ease;
+    justify-content: center;
 }
 
 .menu-item:hover {
@@ -606,17 +618,18 @@ body {
     color: white;
     font-family: '6809', monospace;
     font-size: 14px;
+    padding: 0 5px;
 }
 
 .menu-item div .pick {
     color: #a5c89f;
+    text-shadow: 0 0 3px rgba(165, 200, 159, 0.7);
+    font-weight: bold;
 }
 
+/* Hide the menu-item__info class since we're not using it anymore */
 .menu-item__info {
-    margin-top: 3px;
-    font-size: 10px;
-    color: #888;
-    text-align: center;
+    display: none;
 }
 
 #noti-box {
@@ -837,4 +850,13 @@ input:checked + .dpad-toggle-slider:before {
 
 .side-button:hover::after {
     opacity: 1;
+}
+
+/* Enhance the selected item appearance */
+.menu-item:has(span.pick) {
+    transform: scale(1.05);
+    background-color: rgba(165, 200, 159, 0.35);
+    box-shadow: 0 0 8px rgba(165, 200, 159, 0.4);
+    z-index: 5;
+    height: 30px;
 }

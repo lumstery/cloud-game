@@ -163,8 +163,23 @@ function handleVpadJoystickMove(event) {
     }
 }
 
-// right side - control buttons
-const _handleButton = (key, state) => checkVpadState(key, state)
+function _handleButton(key, isDown) {
+    if (!enabled) return
+    
+    // Update the vpad state
+    const prev = vpadState[key];
+    vpadState[key] = isDown
+    
+    if (prev !== isDown) {
+        if (isDown) {
+            pub(KEY_PRESSED, {key: key, player: GAME_PLAYER_IDX})
+        } else {
+            pub(KEY_RELEASED, {key: key, player: GAME_PLAYER_IDX})
+        }
+    }
+    
+    return isDown
+}
 
 function handleButtonDown() {
     _handleButton(getKey(this), true);
@@ -299,6 +314,25 @@ if (playerSlider) {
     }
 }
 
+// Remove duplicated listeners
+dpad.forEach(button => {
+    button.addEventListener('touchstart', handleButtonDown);
+    button.addEventListener('touchend', handleButtonUp);
+    button.addEventListener('mousedown', handleButtonDown);
+    button.addEventListener('mouseup', handleButtonUp);
+});
+
+// Special handling for phone numeric keys
+const phoneKeys = Array.from(document.querySelectorAll('.phone-key'));
+phoneKeys.forEach(button => {
+    button.addEventListener('touchstart', handleButtonDown);
+    button.addEventListener('touchend', handleButtonUp);
+    button.addEventListener('mousedown', handleButtonDown);
+    button.addEventListener('mouseup', handleButtonUp);
+});
+
+sub(DPAD_TOGGLE, (data) => onDpadToggle(data.checked));
+
 /**
  * Touch controls.
  *
@@ -316,16 +350,8 @@ export const touch = {
         pub(MENU_HANDLER_ATTACHED, {event: 'touchstart', handler: handleMenuDown});
         pub(MENU_HANDLER_ATTACHED, {event: 'touchend', handler: handleMenuUp});
 
-        // Phone keypad touch events
+        // Phone keypad and control buttons touch events
         buttons.forEach(button => {
-            button.addEventListener('touchstart', handleButtonDown);
-            button.addEventListener('touchend', handleButtonUp);
-            button.addEventListener('mousedown', handleButtonDown);
-            button.addEventListener('mouseup', handleButtonUp);
-        });
-
-        // Handle dpad events 
-        dpad.forEach(button => {
             button.addEventListener('touchstart', handleButtonDown);
             button.addEventListener('touchend', handleButtonUp);
             button.addEventListener('mousedown', handleButtonDown);
@@ -336,7 +362,10 @@ export const touch = {
 
         // add buttons into the state
         buttons.forEach((el) => {
-            vpadState[getKey(el)] = false;
+            const key = getKey(el);
+            if (key) {
+                vpadState[key] = false;
+            }
         });
 
         window.addEventListener('pointermove', handleWindowMove);
