@@ -10,7 +10,7 @@ import {debounce} from 'utils';
 
 const id = 'servers',
     _class = 'server-list',
-    trigger = document.getElementById('w'),
+    trigger = document.querySelector('.side-button-workers'),
     panel = gui.panel(document.getElementById(id), 'WORKERS', 'server-list', null, [
         {
             caption: '⟳',

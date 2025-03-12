@@ -263,7 +263,15 @@ const onKeyRelease = data => {
     }
 
     // change app state if settings
-    if (KEY.SETTINGS === data.key) setState(app.state.settings);
+    if (KEY.SETTINGS === data.key || KEY.OPTIONS === data.key) setState(app.state.settings);
+    
+    // handle workers panel if workers button is pressed
+    if (KEY.WORKERS === data.key) {
+        const workersButton = document.querySelector('.side-button-workers');
+        if (workersButton) {
+            workersButton.dispatchEvent(new Event('click'));
+        }
+    }
 
     state.keyRelease(data.key, data.code);
 };

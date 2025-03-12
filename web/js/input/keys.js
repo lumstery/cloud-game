@@ -30,4 +30,6 @@ export const KEY = {
     R3: 'r3',
     REC: 'rec',
     RESET: 'reset',
+    WORKERS: 'workers',
+    OPTIONS: 'options',
 }

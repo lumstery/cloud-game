@@ -549,18 +549,23 @@ body {
 
 .phone-softkey {
     height: 35px;
-    margin-top: 15px;
-    background-color: #a5c89f;
+    margin-top: 5px;
+    background-color: #b5b5b5;
+    border-bottom: 1px solid #999;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #333;
+    font-weight: normal;
 }
 
 .phone-softkey-left {
-    border-top-right-radius: 15px;
-    border-bottom-right-radius: 15px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .phone-softkey-right {
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 #menu-container {
@@ -750,4 +755,86 @@ input:checked + .dpad-toggle-slider:before {
     bottom: 285px;
     left: 22px;
     z-index: 5;
+}
+
+/* Side buttons styling */
+.side-button {
+    position: absolute;
+    width: 15px;
+    height: 60px;
+    background-color: #777;
+    border-radius: 2px;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.side-button:active {
+    background-color: #555;
+    transform: translateY(1px);
+}
+
+.side-button-left {
+    left: -4px;
+    top: 180px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.side-button-right {
+    right: -4px;
+    top: 250px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.side-button-start {
+    top: 320px;
+    height: 40px;
+    background-color: #8c8c8c;
+}
+
+.side-button-options {
+    top: 380px;
+    height: 40px;
+    background-color: #777777;
+}
+
+.side-button-workers {
+    top: 440px;
+    height: 40px;
+    background-color: #777777;
+}
+
+.side-button-help {
+    top: 500px;
+    height: 40px;
+    background-color: #777777;
+}
+
+/* Side button tooltip */
+.side-button::after {
+    content: attr(data-label);
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.side-button-left::after {
+    left: 20px;
+}
+
+.side-button-right::after {
+    right: 20px;
+}
+
+.side-button:hover::after {
+    opacity: 1;
 }

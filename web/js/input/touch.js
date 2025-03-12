@@ -25,7 +25,7 @@ let vpadTouchDrag = null;
 let vpadHolder = document.getElementById('phone-keypad');
 let vpadCircle = null;
 
-const buttons = Array.from(document.querySelectorAll('.phone-key, .key-up, .key-down, .key-left, .key-right, .key-center'));
+const buttons = Array.from(document.querySelectorAll('.phone-key, .key-up, .key-down, .key-left, .key-right, .key-center, .side-button'));
 const playerSlider = document.getElementById('playeridx');
 const dpad = Array.from(document.querySelectorAll('.key-up, .key-down, .key-left, .key-right'));
 
