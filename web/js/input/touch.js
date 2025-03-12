@@ -22,16 +22,18 @@ let analogState = [0, 0];
 
 let vpadTouchIdx = null;
 let vpadTouchDrag = null;
-let vpadHolder = document.getElementById('circle-pad-holder');
-let vpadCircle = document.getElementById('circle-pad');
+let vpadHolder = document.getElementById('phone-keypad');
+let vpadCircle = null;
 
-const buttons = Array.from(document.getElementsByClassName('btn'));
+const buttons = Array.from(document.querySelectorAll('.phone-key, .key-up, .key-down, .key-left, .key-right, .key-center'));
 const playerSlider = document.getElementById('playeridx');
-const dpad = Array.from(document.getElementsByClassName('dpad'));
+const dpad = Array.from(document.querySelectorAll('.key-up, .key-down, .key-left, .key-right'));
 
-const dpadToggle = document.getElementById('dpad-toggle')
+const dpadToggle = document.getElementById('dpad-toggle') || { addEventListener: () => {} };
 dpadToggle.addEventListener('change', (e) => {
-    pub(DPAD_TOGGLE, {checked: e.target.checked});
+    if (e && e.target) {
+        pub(DPAD_TOGGLE, {checked: e.target.checked});
+    }
 });
 
 const getKey = (el) => el.dataset.key
@@ -47,14 +49,15 @@ function onDpadToggle(checked) {
     }
     if (dpadMode) {
         dpadMode = false;
-        vpadHolder.classList.add('dpad-empty');
-        vpadCircle.classList.add('bong-full');
+        vpadHolder?.classList.add('dpad-empty');
+        // Since we removed the circle pad, we need to skip these operations
+        // vpadCircle?.classList.add('bong-full');
         // reset dpad keys pressed before moving to analog stick mode
         resetVpadState()
     } else {
         dpadMode = true;
-        vpadHolder.classList.remove('dpad-empty');
-        vpadCircle.classList.remove('bong-full');
+        vpadHolder?.classList.remove('dpad-empty');
+        // vpadCircle?.classList.remove('bong-full');
     }
 }
 
@@ -92,7 +95,8 @@ function checkAnalogState(axis, value) {
 }
 
 function handleVpadJoystickDown(event) {
-    vpadCircle.style['transition'] = '0s';
+    // Since we removed the circle pad, we'll skip these operations
+    // vpadCircle?.style['transition'] = '0s';
 
     if (event.changedTouches) {
         resetVpadState();
@@ -107,8 +111,9 @@ function handleVpadJoystickDown(event) {
 function handleVpadJoystickUp() {
     if (vpadTouchDrag === null) return;
 
-    vpadCircle.style['transition'] = '.2s';
-    vpadCircle.style['transform'] = 'translate3d(0px, 0px, 0px)';
+    // Since we removed the circle pad, we'll skip these operations
+    // vpadCircle?.style['transition'] = '.2s';
+    // vpadCircle?.style['transform'] = 'translate3d(0px, 0px, 0px)';
 
     resetVpadState();
 }
@@ -141,7 +146,8 @@ function handleVpadJoystickMove(event) {
         yNew = -tmp;
     }
 
-    vpadCircle.style['transform'] = `translate(${xNew}px, ${yNew}px)`;
+    // Since we removed the circle pad, we'll skip this operation
+    // vpadCircle?.style['transform'] = `translate(${xNew}px, ${yNew}px)`;
 
     let xRatio = xNew / MAX_DIFF;
     let yRatio = yNew / MAX_DIFF;
@@ -278,22 +284,19 @@ buttons.forEach((btn) => {
     btn.addEventListener('touchend', handleButtonUp);
 });
 
-// touch/mouse events for dpad. mouseup events is bound to window.
-vpadHolder.addEventListener('mousedown', handleVpadJoystickDown);
-vpadHolder.addEventListener('touchstart', handleVpadJoystickDown, {passive: true});
-vpadHolder.addEventListener('touchend', handleVpadJoystickUp);
-
 dpad.forEach((arrow) => {
     arrow.addEventListener('click', handleButtonClick);
 });
 
 // touch/mouse events for player slider.
-playerSlider.addEventListener('oninput', handlePlayerSlider);
-playerSlider.addEventListener('onchange', handlePlayerSlider);
-playerSlider.addEventListener('click', handlePlayerSlider);
-playerSlider.addEventListener('touchend', handlePlayerSlider);
-playerSlider.onkeydown = (e) => {
-    e.preventDefault();
+if (playerSlider) {
+    playerSlider.addEventListener('oninput', handlePlayerSlider);
+    playerSlider.addEventListener('onchange', handlePlayerSlider);
+    playerSlider.addEventListener('click', handlePlayerSlider);
+    playerSlider.addEventListener('touchend', handlePlayerSlider);
+    playerSlider.onkeydown = (e) => {
+        e.preventDefault();
+    }
 }
 
 /**
@@ -309,15 +312,30 @@ export const touch = {
     init: () => {
         enabled = true
         // Bind events for menu
-        // TODO change this flow
         pub(MENU_HANDLER_ATTACHED, {event: 'mousedown', handler: handleMenuDown});
         pub(MENU_HANDLER_ATTACHED, {event: 'touchstart', handler: handleMenuDown});
         pub(MENU_HANDLER_ATTACHED, {event: 'touchend', handler: handleMenuUp});
 
+        // Phone keypad touch events
+        buttons.forEach(button => {
+            button.addEventListener('touchstart', handleButtonDown);
+            button.addEventListener('touchend', handleButtonUp);
+            button.addEventListener('mousedown', handleButtonDown);
+            button.addEventListener('mouseup', handleButtonUp);
+        });
+
+        // Handle dpad events 
+        dpad.forEach(button => {
+            button.addEventListener('touchstart', handleButtonDown);
+            button.addEventListener('touchend', handleButtonUp);
+            button.addEventListener('mousedown', handleButtonDown);
+            button.addEventListener('mouseup', handleButtonUp);
+        });
+
         sub(DPAD_TOGGLE, (data) => onDpadToggle(data.checked));
 
-        // add buttons into the state 🤦
-        Array.from(document.querySelectorAll('.btn,.btn-big')).forEach((el) => {
+        // add buttons into the state
+        buttons.forEach((el) => {
             vpadState[getKey(el)] = false;
         });
 

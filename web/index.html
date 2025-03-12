@@ -24,6 +24,12 @@
 <div id="gamebody">
     <div class="app-button" id="w" title="Workers">W</div>
 
+    <!-- Phone status bar -->
+    <div id="phone-status">
+        <div>Signal ▮▮▮▯</div>
+        <div>Battery ▮▮▮▯</div>
+    </div>
+
     <div id="screen">
         <video id="stream" class="game-screen" hidden muted playsinline preload="none"></video>
         <canvas id="mirror-stream" class="game-screen" hidden></canvas>
@@ -43,53 +49,46 @@
         </div>
     </div>
 
-    <div id="circle-pad-holder">
-        <div id="btn-up" class="dpad" data-key="up"></div>
-        <div id="btn-down" class="dpad" data-key="down"></div>
-        <div id="btn-left" class="dpad" data-key="left"></div>
-        <div id="btn-right" class="dpad" data-key="right"></div>
-        <div id="circle-pad"></div>
-    </div>
-
     <div id="servers"></div>
     <div id="settings"></div>
 
-    <div id="guide-txt">
-        <b>Arrows</b> (move), <b>ZXCVAS;'./</b> (game ABXYL1-L3R1-R3),
-        <b>Shift/Enter/K/L</b> (select/start/save/load), <b>F</b> (fullscreen), <b>share</b> (copy the link)
-    </div>
-    <div id="btn-join" class="btn big" data-key="join"></div>
-    <div id="slider-playeridx" class="slidecontainer">
-        <span>player choice</span>
-        <input type="range" aria-label="" min="1" max="4" value="1" class="slider" id="playeridx">
-    </div>
-    <div id="btn-quit" class="btn big" data-key="quit"></div>
-
-    <div class="app-button kbm-button hidden" id="kbm" title="Switch from keyboard/mouse to retropad">
-        C🎮+K⌨️+M🖱️</div>
-
-    <div id="controls-right">
-        <div id="btn-load" class="btn big hidden" data-key="load"></div>
-        <div id="btn-save" class="btn big hidden" data-key="save"></div>
-        <div id="btn-select" class="btn big" data-key="select"></div>
-        <div id="btn-start" class="btn big" data-key="start"></div>
-
-        <div id="color-button-holder">
-            <div id="btn-a" class="btn" data-key="a"></div>
-            <div id="btn-b" class="btn" data-key="b"></div>
-            <div id="btn-x" class="btn" data-key="x"></div>
-            <div id="btn-y" class="btn" data-key="y"></div>
+    <!-- Mobile phone keypad UI -->
+    <div id="phone-keypad">
+        <!-- Soft keys at the top -->
+        <div class="phone-key phone-softkey phone-softkey-left" data-key="select">Menu</div>
+        <div class="phone-key phone-softkey" style="visibility: hidden;"></div>
+        <div class="phone-key phone-softkey phone-softkey-right" data-key="start">Options</div>
+        
+        <!-- Navigation pad -->
+        <div class="key-nav">
+            <div class="key-up" data-key="up">▲</div>
+            <div class="key-left" data-key="left">◀</div>
+            <div class="key-center" data-key="a">OK</div>
+            <div class="key-right" data-key="right">▶</div>
+            <div class="key-down" data-key="down">▼</div>
         </div>
+        
+        <!-- Numeric keypad -->
+        <div class="phone-key" data-key="1">1</div>
+        <div class="phone-key" data-key="2">2</div>
+        <div class="phone-key" data-key="3">3</div>
+        
+        <div class="phone-key" data-key="4">4</div>
+        <div class="phone-key" data-key="5">5</div>
+        <div class="phone-key" data-key="6">6</div>
+        
+        <div class="phone-key" data-key="7">7</div>
+        <div class="phone-key" data-key="8">8</div>
+        <div class="phone-key" data-key="9">9</div>
+        
+        <div class="phone-key key-func" data-key="*">*</div>
+        <div class="phone-key" data-key="0">0</div>
+        <div class="phone-key key-func" data-key="#">#</div>
     </div>
 
     <div id="btn-settings" class="btn" data-key="settings"></div>
 
     <input id="room-txt" type="text" aria-label="" placeholder="room id..." disabled>
-
-    <label class="dpad-toggle-label" title="D-pad toggle">
-        <input type="checkbox" id="dpad-toggle" checked>
-        <span class="dpad-toggle-slider"></span>
-    </label>
 
     <div id="noti-box">Oh my god</div>
 

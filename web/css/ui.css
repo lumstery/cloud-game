@@ -243,7 +243,6 @@
 
 #screen {
     display: flex;
-    /*align-items: center;*/
     justify-content: center;
     overflow: hidden;
 
@@ -254,14 +253,14 @@
     height: 320px;
     
     position: relative;
-    top: 30px;
+    top: 60px;
     align-self: center;
     
-    border: 6px solid #333;
-    border-radius: 8px;
-    margin-bottom: 100px;
+    border: 3px solid #333;
+    border-radius: 5px;
+    margin-bottom: 30px;
     background-color: #a5c89f;
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Mobile phone game title */
@@ -276,6 +275,48 @@
     font-size: 14px;
     font-weight: bold;
     color: #333;
+}
+
+/* Phone speaker */
+#gamebody:before {
+    content: "";
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 8px;
+    background-color: #333;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+/* Status indicators */
+#phone-status {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    color: #333;
+}
+
+/* Mobile phone brand text */
+.mobile-brand {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #444;
+    letter-spacing: 1px;
+    z-index: 10;
 }
 
 .screen__footer {
@@ -397,33 +438,4 @@
     padding: .5rem;
     
     cursor: pointer;
-}
-
-/* Mobile phone decorative elements */
-#gamebody:before {
-    content: "";
-    position: absolute;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 10px;
-    background-color: #333;
-    border-radius: 5px;
-    z-index: 10;
-}
-
-
-/* Mobile phone brand text - avoiding Nokia directly */
-.mobile-brand {
-    position: absolute;
-    bottom: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    color: #444;
-    letter-spacing: 1px;
-    z-index: 10;
 }

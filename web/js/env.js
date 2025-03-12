@@ -20,30 +20,21 @@ const fixScreenLayout = () => {
         targetWidth = Math.round(pw * 0.9 / 2) * 2,
         targetHeight = Math.round(ph * 0.9 / 2) * 2;
 
-    // save page rotation
-    isLayoutSwitched = isPortrait();
+    // Always use portrait mode
+    isLayoutSwitched = false;
 
     rescaleGameBoy(targetWidth, targetHeight);
 
-    sourceLink.style['bottom'] = isLayoutSwitched ? 0 : '';
-    if (isLayoutSwitched) {
-        sourceLink.style.removeProperty('right');
-        sourceLink.style['left'] = 5;
-    } else {
-        sourceLink.style.removeProperty('left');
-        sourceLink.style['right'] = 5;
-    }
-    sourceLink.style['transform'] = isLayoutSwitched ? 'rotate(-90deg)' : '';
-    sourceLink.style['transform-origin'] = isLayoutSwitched ? 'left top' : '';
+    sourceLink.style['bottom'] = 0;
+    sourceLink.style.removeProperty('right');
+    sourceLink.style['left'] = 5;
+    sourceLink.style['transform'] = '';
+    sourceLink.style['transform-origin'] = '';
 };
 
 const rescaleGameBoy = (targetWidth, targetHeight) => {
+    // Remove rotation transformations, always keep vertical
     const transformations = ['translate(-50%, -50%)'];
-
-    if (isLayoutSwitched) {
-        transformations.push('rotate(90deg)');
-        [targetWidth, targetHeight] = [targetHeight, targetWidth]
-    }
 
     // scale, fit to target size
     const scale = Math.min(targetWidth / getWidth(gameBoy), targetHeight / getHeight(gameBoy));
