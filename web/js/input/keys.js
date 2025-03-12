@@ -32,20 +32,4 @@ export const KEY = {
     RESET: 'reset',
     WORKERS: 'workers',
     OPTIONS: 'options',
-    
-    // Numeric keys for J2ME games (direct mapping to match HTML data-key values)
-    '0': '0',
-    '1': '1',
-    '2': '2',
-    '3': '3',
-    '4': '4',
-    '5': '5',
-    '6': '6',
-    '7': '7',
-    '8': '8',
-    '9': '9',
-    
-    // Special keys
-    '*': '*',
-    '#': '#'
 }

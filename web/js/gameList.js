@@ -3,8 +3,6 @@ import {gui} from 'gui';
 
 const TOP_POSITION = 102
 const SELECT_THRESHOLD_MS = 160
-const ITEM_HEIGHT = 30 // Height of each menu item
-const VISIBLE_ITEMS = 7 // Approximate number of visible items in the container
 
 const games = (() => {
     let list = [], index = 0
@@ -118,7 +116,16 @@ const ui = (() => {
 
     const item = (parent) => {
         const title = parent.firstChild.firstChild
-        
+        const desc = parent.children[1]
+
+        const _desc = {
+            hide: () => gui.hide(desc),
+            show: async () => {
+                gui.show(desc)
+                await gui.anim.fadeIn(desc, .054321)
+            },
+        }
+
         const isOverflown = () => title.scrollWidth > title.clientWidth
 
         const _title = {
@@ -135,6 +142,9 @@ const ui = (() => {
         const clear = () => _title.reset()
 
         return {
+            get description() {
+                return _desc
+            },
             get title() {
                 return _title
             },
@@ -146,33 +156,10 @@ const ui = (() => {
         rootEl.innerHTML = games.list.map(game =>
             `<div class="menu-item">` +
             `<div><span>${game.alias ? game.alias : game.title}</span></div>` +
+            `<div class="menu-item__info">${game.system}</div>` +
             `</div>`)
             .join('')
         items = [...rootEl.querySelectorAll('.menu-item')].map(x => item(x))
-    }
-
-    // Calculate the optimal position to maintain carousel effect
-    const calculateCarouselPosition = (index) => {
-        // Calculate center position for the list
-        const center = Math.floor(VISIBLE_ITEMS / 2);
-        
-        // If we have fewer items than can be displayed, center the list
-        if (games.list.length <= VISIBLE_ITEMS) {
-            return TOP_POSITION;
-        }
-        
-        // For the first few items, keep the list at the top
-        if (index <= center) {
-            return TOP_POSITION;
-        }
-        
-        // For the last few items, keep the list at the bottom
-        if (index >= games.list.length - center - 1) {
-            return TOP_POSITION - (games.list.length - VISIBLE_ITEMS) * ITEM_HEIGHT;
-        }
-        
-        // For items in the middle, maintain the item at the center of the view
-        return TOP_POSITION - (index - center) * ITEM_HEIGHT;
     }
 
     return {
@@ -183,7 +170,7 @@ const ui = (() => {
             return items[games.index]
         },
         get roundIndex() {
-            const closest = Math.round((listTopPos - TOP_POSITION) / -ITEM_HEIGHT)
+            const closest = Math.round((listTopPos - TOP_POSITION) / -36)
             return closest < 0 ? 0 :
                 closest > games.list.length - 1 ? games.list.length - 1 :
                     closest // don't wrap the list on drag
@@ -192,8 +179,7 @@ const ui = (() => {
             onTransitionEnd = x
         },
         set pos(idx) {
-            // Use the carousel positioning logic
-            listTopPos = calculateCarouselPosition(idx);
+            listTopPos = TOP_POSITION - idx * 36
             rootEl.style.top = `${listTopPos}px`
         },
         drag: {
@@ -212,7 +198,7 @@ const ui = (() => {
         },
         NO_TRANSITION: onTransitionEnd(),
     }
-})()
+})(TOP_POSITION, SELECT_THRESHOLD_MS, games)
 
 const show = () => {
     ui.render()
@@ -262,5 +248,8 @@ export const gameList = {
         return games.selected
     },
     set: games.set,
-    show,
+    show: () => {
+        if (games.empty()) return
+        show()
+    },
 }

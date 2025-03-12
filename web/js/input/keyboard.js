@@ -47,19 +47,6 @@ const defaultMap = Object.freeze({
     Digit9: KEY.SETTINGS,
     KeyT: KEY.DTOGGLE,
     Digit0: KEY.RESET,
-    // J2ME numeric keys - numeric keypad
-    Numpad0: '0',
-    Numpad1: '1',
-    Numpad2: '2',
-    Numpad3: '3',
-    Numpad4: '4',
-    Numpad5: '5',
-    Numpad6: '6',
-    Numpad7: '7',
-    Numpad8: '8',
-    Numpad9: '9',
-    NumpadMultiply: '*',
-    NumpadAdd: '#',
 });
 
 let keyMap = {};
