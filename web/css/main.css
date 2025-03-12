@@ -800,14 +800,20 @@ input:checked + .dpad-toggle-slider:before {
     background-color: #777777;
 }
 
-.side-button-workers {
+.side-button-quit {
     top: 440px;
+    height: 40px;
+    background-color: #cc3333;
+}
+
+.side-button-workers {
+    top: 500px;
     height: 40px;
     background-color: #777777;
 }
 
 .side-button-help {
-    top: 500px;
+    top: 560px;
     height: 40px;
     background-color: #777777;
 }

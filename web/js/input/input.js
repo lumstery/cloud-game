@@ -12,6 +12,7 @@ import {keyboard} from './keyboard.js?v=3'
 import {pointer} from './pointer.js?v=3';
 import {retropad} from './retropad.js?v=3';
 import {touch} from './touch.js?v=3';
+import {api} from 'api';
 
 export {joystick, keyboard, pointer, retropad, touch};
 
@@ -28,7 +29,7 @@ const input_state = {
 const init = () => {
     keyboard.init()
     joystick.init()
-    touch.init()
+    touch.init(api)
 }
 
 sub(KB_MOUSE_FLAG, () => {

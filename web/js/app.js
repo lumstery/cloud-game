@@ -420,6 +420,7 @@ const app = {
                         break;
                     case KEY.QUIT:
                         input.retropad.toggle(false)
+                        log.info('[app] Quit button pressed, quitting game')
                         api.game.quit(room.id)
                         room.reset();
                         window.location = window.location.pathname;
@@ -547,6 +548,20 @@ api.transport = {
     mouse: webrtc.mouse,
 }
 
+// Make API and webrtc globally available for initialization purposes
+window.api = api;
+window.webrtc = webrtc;
+
+// Add a direct helper method on window to initialize phoneKeypad that can be called from anywhere
+window.initPhoneKeypad = function(transport) {
+    if (window.phoneKeypadHelper && window.phoneKeypadHelper.init) {
+        window.phoneKeypadHelper.init(transport || api.transport);
+        log.info('[app] Initialized phoneKeypad via window.initPhoneKeypad');
+        return true;
+    }
+    return false;
+};
+
 // stats
 let WEBRTC_STATS_RTT;
 let VIDEO_BITRATE;
@@ -618,3 +633,10 @@ stats.modules = [
     }]
 
 stats.toggle()
+
+// Ensure phoneKeypad is initialized after everything else is loaded
+setTimeout(() => {
+    if (window.initPhoneKeypad) {
+        window.initPhoneKeypad(api.transport);
+    }
+}, 1000);

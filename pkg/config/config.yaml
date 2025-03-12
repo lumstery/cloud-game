@@ -257,6 +257,10 @@ emulator:
             "freej2me_resolution": "240x320"
             "freej2me_rotate": "0"
             "freej2me_phone": "Nokia_6230i"
+            "freej2me_keyboard_gamepad_hack": "enabled"
+            "freej2me_vfr": "disabled"
+            "freej2me_nokiaui": "enabled"
+            "freej2me_gles": "enabled"
 encoder:
   audio:
     # audio frame duration needed for WebRTC (Opus)

@@ -13,6 +13,7 @@ import {
 } from 'event';
 import {KEY} from 'input';
 import {log} from 'log';
+import {phoneKeypad} from './phoneKeypad.js?v=3';
 
 const MAX_DIFF = 20; // radius of circle boundary
 
@@ -41,7 +42,8 @@ const getKey = (el) => el.dataset.key
 let dpadMode = true;
 const deadZone = 0.1;
 
-let enabled = false
+let enabled = false;
+let phoneKeypadInitialized = false;
 
 function onDpadToggle(checked) {
     if (dpadMode === checked) {
@@ -164,20 +166,43 @@ function handleVpadJoystickMove(event) {
 }
 
 // right side - control buttons
-const _handleButton = (key, state) => checkVpadState(key, state)
+const _handleButton = (key, state, element) => {
+    // Check if this button has an alternate key (for special cases like OK/5)
+    const altKey = element ? element.dataset.altKey : null;
+    
+    // Check if this is a phone keypad key first
+    if (phoneKeypad.isPhoneKey(key)) {
+        // Handle with our specialized phone keypad handler
+        if (!phoneKeypad.handleKey(key, state)) {
+            // If phone keypad handler doesn't handle it (returns false), fall back to the default
+            checkVpadState(key, state);
+        }
+        
+        // If this button has an alt key, also send that event
+        if (altKey && phoneKeypad.isPhoneKey(altKey)) {
+            // Handle the alt key with a small delay
+            setTimeout(() => {
+                phoneKeypad.handleKey(altKey, state);
+            }, 10);
+        }
+    } else {
+        // Use the default handler for non-phone keys
+        checkVpadState(key, state);
+    }
+}
 
 function handleButtonDown() {
-    _handleButton(getKey(this), true);
+    _handleButton(getKey(this), true, this);
 }
 
 function handleButtonUp() {
-    _handleButton(getKey(this), false);
+    _handleButton(getKey(this), false, this);
 }
 
 function handleButtonClick() {
-    _handleButton(getKey(this), true);
+    _handleButton(getKey(this), true, this);
     setTimeout(() => {
-        _handleButton(getKey(this), false);
+        _handleButton(getKey(this), false, this);
     }, 30);
 }
 
@@ -309,41 +334,85 @@ if (playerSlider) {
  * @version 1
  */
 export const touch = {
-    init: () => {
-        enabled = true
-        // Bind events for menu
-        pub(MENU_HANDLER_ATTACHED, {event: 'mousedown', handler: handleMenuDown});
-        pub(MENU_HANDLER_ATTACHED, {event: 'touchstart', handler: handleMenuDown});
-        pub(MENU_HANDLER_ATTACHED, {event: 'touchend', handler: handleMenuUp});
+    init: (api) => {
+        if (enabled) return;
+        enabled = true;
 
-        // Phone keypad touch events
+        // Try to initialize phone keypad directly from global objects if API not provided
+        if (!api || !api.transport) {
+            // Try from window.api first
+            if (window.api && window.api.transport) {
+                log.info('[input] touch using window.api for phoneKeypad initialization');
+                phoneKeypad.init(window.api.transport);
+                phoneKeypadInitialized = true;
+            } 
+            // Try from window.webrtc
+            else if (window.webrtc) {
+                log.info('[input] touch using window.webrtc for phoneKeypad initialization');
+                phoneKeypad.init({keyboard: window.webrtc.keyboard, mouse: window.webrtc.mouse});
+                phoneKeypadInitialized = true;
+            }
+        } else {
+            // Initialize the phone keypad handler with the provided API transport
+            phoneKeypad.init(api.transport);
+            phoneKeypadInitialized = true;
+            log.info('[input] phone keypad initialized with provided transport');
+        }
+
+        // Add event listeners for buttons
         buttons.forEach(button => {
-            button.addEventListener('touchstart', handleButtonDown);
+            button.addEventListener('touchstart', handleButtonDown, {passive: true});
             button.addEventListener('touchend', handleButtonUp);
             button.addEventListener('mousedown', handleButtonDown);
             button.addEventListener('mouseup', handleButtonUp);
+            button.addEventListener('click', handleButtonClick);
         });
 
-        // Handle dpad events 
-        dpad.forEach(button => {
-            button.addEventListener('touchstart', handleButtonDown);
-            button.addEventListener('touchend', handleButtonUp);
-            button.addEventListener('mousedown', handleButtonDown);
-            button.addEventListener('mouseup', handleButtonUp);
+        // Player slider
+        playerSlider && playerSlider.addEventListener('input', handlePlayerSlider);
+
+        // Bind vpad events
+        /*
+        vpadCircleContainer?.addEventListener('touchstart', handleVpadJoystickDown, {passive: true});
+        vpadCircleContainer?.addEventListener('touchend', handleVpadJoystickUp);
+        vpadCircleContainer?.addEventListener('touchcancel', handleVpadJoystickUp);
+        vpadCircleContainer?.addEventListener('touchmove', handleVpadJoystickMove, {passive: true});
+        */
+
+        // Make sure we initialize the phone keypad even if the API wasn't available during initial init
+        sub(MENU_HANDLER_ATTACHED, (data) => {
+            if (data && data.handler && data.handler.transport && !phoneKeypadInitialized) {
+                phoneKeypad.init(data.handler.transport);
+                phoneKeypadInitialized = true;
+                log.info('[input] phone keypad initialized with transport (from menu handler)');
+            }
         });
 
-        sub(DPAD_TOGGLE, (data) => onDpadToggle(data.checked));
+        // Attempt API initialization in a few seconds if it failed initially
+        // This allows time for WebRTC connection to be established
+        setTimeout(() => {
+            if (!phoneKeypadInitialized && window.api && window.api.transport) {
+                phoneKeypad.init(window.api.transport);
+                phoneKeypadInitialized = true;
+                log.info('[input] phone keypad initialized with delayed global api');
+            }
+        }, 3000);
 
-        // add buttons into the state
-        buttons.forEach((el) => {
-            vpadState[getKey(el)] = false;
-        });
+        // Also expose a global helper function to initialize from anywhere
+        window.initPhoneKeypad = (api) => {
+            if (!phoneKeypadInitialized && api && api.transport) {
+                phoneKeypad.init(api.transport);
+                phoneKeypadInitialized = true;
+                log.info('[input] phone keypad initialized via global helper');
+            }
+        };
 
-        window.addEventListener('pointermove', handleWindowMove);
+        // Setup window events
         window.addEventListener('touchmove', handleWindowMove, {passive: false});
-        window.addEventListener('mouseup', handleWindowUp);
+        window.addEventListener('mousemove', handleWindowMove, {passive: false});
+        window.addEventListener('wheel', handleWindowMove, {passive: false});
 
-        log.info('[input] touch input has been initialized');
+        log.info('[input] touch has been initialized');
     },
     toggle: (v) => v === undefined ? (enabled = !enabled) : (enabled = v)
 }
