@@ -176,7 +176,9 @@ const binding = (key = '', value = '', cb = () => ({})) => {
 }
 
 const show = (...els) => {
-    els.forEach(el => el.classList.remove('hidden'))
+    els.forEach(el => {
+        if (el) el.classList.remove('hidden')
+    })
 }
 
 const inputN = (key = '', cb = () => ({}), current = 0) => {
@@ -190,10 +192,12 @@ const inputN = (key = '', cb = () => ({}), current = 0) => {
 }
 
 const hide = (el) => {
-    el.classList.add('hidden');
+    if (el) el.classList.add('hidden');
 }
 
 const toggle = (el, what) => {
+    if (!el) return;
+    
     if (what === undefined) {
         el.classList.toggle('hidden')
         return
@@ -206,7 +210,9 @@ const multiToggle = (elements = [], options = {list: []}) => {
 
     let i = 0
 
-    const setText = () => elements.forEach(el => el.innerText = options.list[i].caption)
+    const setText = () => elements.forEach(el => {
+        if (el) el.innerText = options.list[i].caption
+    })
 
     const handleClick = () => {
         options.list[i].cb()
@@ -215,7 +221,9 @@ const multiToggle = (elements = [], options = {list: []}) => {
     }
 
     setText()
-    elements.forEach(el => el.addEventListener('click', handleClick))
+    elements.forEach(el => {
+        if (el) el.addEventListener('click', handleClick)
+    })
 }
 
 const fadeIn = async (el, speed = .1) => {

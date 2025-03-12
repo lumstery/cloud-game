@@ -168,7 +168,7 @@ const startGame = () => {
         room.id,
         false,
         "",
-        +playerIndex.value - 1,
+        playerIndex ? (+playerIndex.value - 1) : 0,
     )
 
     gameList.disable()
@@ -224,10 +224,12 @@ const _dpadArrowKeys = [KEY.UP, KEY.DOWN, KEY.LEFT, KEY.RIGHT];
 const onKeyPress = (data) => {
     const button = keyButtons[data.key];
 
-    if (_dpadArrowKeys.includes(data.key)) {
-        button.classList.add('dpad-pressed');
-    } else {
-        if (button) button.classList.add('pressed');
+    if (button) {
+        if (_dpadArrowKeys.includes(data.key)) {
+            button.classList.add('dpad-pressed');
+        } else {
+            button.classList.add('pressed');
+        }
     }
 
     if (state !== app.state.settings) {
@@ -241,10 +243,12 @@ const onKeyPress = (data) => {
 const onKeyRelease = data => {
     const button = keyButtons[data.key];
 
-    if (_dpadArrowKeys.includes(data.key)) {
-        button.classList.remove('dpad-pressed');
-    } else {
-        if (button) button.classList.remove('pressed');
+    if (button) {
+        if (_dpadArrowKeys.includes(data.key)) {
+            button.classList.remove('dpad-pressed');
+        } else {
+            button.classList.remove('pressed');
+        }
     }
 
     if (state !== app.state.settings) {
@@ -265,7 +269,9 @@ const onKeyRelease = data => {
 };
 
 const updatePlayerIndex = (idx, not_game = false) => {
-    playerIndex.value = idx + 1;
+    if (playerIndex) {
+        playerIndex.value = idx + 1;
+    }
     !not_game && api.game.setPlayerIndex(idx);
 };
 
@@ -434,14 +440,22 @@ const kbmCb = () => {
     kbmSkip = !kbmSkip
     pub(REFRESH_INPUT)
 }
-gui.multiToggle([kbmEl, kbmEl2], {
-    list: [
-        {caption: '⌨️+🖱️', cb: kbmCb},
-        {caption: ' 🎮 ', cb: kbmCb}
-    ]
-})
+// Only use elements that exist
+const validElements = [kbmEl, kbmEl2].filter(el => el !== null)
+if (validElements.length > 0) {
+    gui.multiToggle(validElements, {
+        list: [
+            {caption: '⌨️+🖱️', cb: kbmCb},
+            {caption: ' 🎮 ', cb: kbmCb}
+        ]
+    })
+}
 sub(KB_MOUSE_FLAG, () => {
-    gui.show(kbmEl, kbmEl2)
+    // Only show elements that exist
+    const validElements = [kbmEl, kbmEl2].filter(el => el !== null)
+    if (validElements.length > 0) {
+        gui.show(...validElements)
+    }
     handleToggle(true)
     message.show('Keyboard and mouse work in fullscreen')
 })
